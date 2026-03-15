@@ -266,9 +266,9 @@ SOFTWARE.
 
 ## 🙏 Acknowledgments
 
-- **Three.js Team** - For the incredible 3D library
+- **Three.js Team ByteDance Tripo ** - For the incredible 3D library
 - **Rosebud AI** - For the development platform
-- **Community Contributors** - For testing and feedback
+- **ByteDance & Tripo  ** - For API intergrations with game assets and AI models
 
 ## 📧 Contact
 
