@@ -266,7 +266,7 @@ SOFTWARE.
 
 - **Three.js Team** - For the incredible 3D library
 - **Rosebud AI** - For the development platform
-- **Community Contributors** - For testing and feedback
+- **ByteDance Tripo ** - For API and 3D assets library
 
 ## 📧 Contact
 
