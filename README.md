@@ -267,6 +267,12 @@ SOFTWARE.
 - **Three.js Team** - For the incredible 3D library
 - **Rosebud AI** - For the development platform
 - **ByteDance Tripo ** - For API and 3D assets library
+- Three.js Documentation
+- Three.js Examples
+- ES6 Modules Guide
+- WebGL Best Practices
+- https://platform.tripo3d.ai/docs/introduction
+- https://www.byteplus.com/en
 
 ## 📧 Contact
 
