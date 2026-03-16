@@ -1,0 +1,15 @@
+{
+  "name": "echoes-dungeon",
+  "version": "1.0.0",
+  "description": "SF GenAI GameJam — The dungeon that remembers",
+  "type": "module",
+  "scripts": {
+    "dev": "npx vite --port 3000 --open",
+    "build": "npx vite build",
+    "preview": "npx vite preview",
+    "prebatch": "node prebatch.js"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

@@ -1,289 +1,131 @@
-# echo-seekers
-Quest to tame your dragon empathy AI based game
-# 🎮 Echo Seekers: Twilight Restoration
+# Echoes — The Dungeon That Remembers
+### SF GenAI GameJam 2026
 
-A rich 3D open-world fantasy adventure game built with **Three.js** in a **buildless ESM environment**. Explore a magical twilight realm, complete quests, discover a thriving village, and restore ancient magic to the world. I used ByteDance and Tripo API for the assets and AI-native interactive worlds. The quest is to keep your dragon alive as the seasons change. It's like having a virtual pet dragon that is born and depends on you to keep it alive. 
-
-![Game Banner](https://img.shields.io/badge/Three.js-0.160.0-blue) ![Status](https://img.shields.io/badge/Status-Active-success) ![License](https://img.shields.io/badge/License-MIT-green)
-
-## ✨ Features
-
-### 🏰 Complete Village System
-- **10+ Detailed Buildings** including taverns, smithies, bakeries, chapels, libraries, and more
-- **Animated Elements** - windmill sails, waving flags, flickering forge fires, bobbing boats
-- **20+ Discoverable Locations** tracked with visual progress map
-- **Market Economy** with 7 merchants, 50+ items, gold currency, and equipment system
-- **Dynamic Day/Night Cycle** with street lamps and atmospheric lighting
-
-### 🎯 Quest & Progression Systems
-- **Visual Quest Log** with active objectives tracker
-- **5 Village Exploration Quests** with proximity-based auto-discovery
-- **3 Core Adventure Quests** - Echo collection, dragon observation, portal secrets
-- **Real-time Notification Popups** for location discoveries and objective completion
-- **Experience & Leveling System** with progress bars
-
-### 🐉 Living World
-- **4 Flying Dragons** with AI pathfinding and feeding mechanics
-- **Dragon Friendship System** with level progression and riding (Level 3+)
-- **20 Fireflies** with particle effects
-- **50+ Animated Trees** swaying in the wind
-- **NPCs** - Elves, gnomes, town crier, and quest givers
-- **Wildlife** - Animated palomino horse with idle behaviors
-
-### 🎨 Character & Customization
-- **Animated Adventurer Character** with 24+ animations
-- **Team System** with 6 preset color schemes
-- **Character Customization Panel** with RGB color pickers
-- **Emote System** (G, H, J, K keys)
-- **Equipment System** with visible stat bonuses
-
-### 🏛️ Notable Landmarks
-- **Castle Dawnspire** - Majestic fortress with towers and battlements
-- **The Golden Flagon Tavern** - 2-story Tudor inn with outdoor seating
-- **Ironheart Smithy** - Working forge with animated bellows
-- **Stonemill Windmill** - Rotating sails and grain storage
-- **Sentinel Tower** - 15-unit watchtower with waving flag
-- **Harbor Dock** - Pier with bobbing rowboat
-- **Market Square** - 4 colorful merchant stalls with fountain
-- **Meadow Cottage & Stable** - Complete with animated horse
-
-### 🎮 Gameplay Features
-- **WASD Movement** with camera-relative controls
-- **Dash & Jump** mechanics (SHIFT/SPACE)
-- **Third-person Camera** with mouse rotation
-- **Inventory System** (50 slots, stacking, rarity tiers)
-- **Merchant Trading** (buy/sell with 50% resale value)
-- **Reputation System** with faction rewards
-- **Dialogue Choices** affecting NPC relationships
-- **Combo System** with XP multipliers
-
-### 🌍 World Features
-- **200×200 Terrain** with grass texture
-- **Twilight Skybox** with atmospheric fog
-- **Mystical Portals** with particle effects
-- **Ancient Ruins** scattered throughout
-- **Cobblestone Paths** connecting all major locations
-- **Water Features** - streams, wells, docks
-- **Decorations** - benches, barrels, crates, flower planters, signposts
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- Local web server (see below)
-
-### Installation
-
-1. **Clone the repository:**
-```bash
-git clone https://github.com/kevintucker/echo-seekers.git
-cd echo-seekers
-```
-
-2. **Start a local web server:**
-
-**Option A - Python:**
-```bash
-# Python 3
-python -m http.server 8000
-
-# Python 2
-python -m SimpleHTTPServer 8000
-```
-
-**Option B - Node.js:**
-```bash
-npx serve
-```
-
-**Option C - VS Code:**
-Install the "Live Server" extension and click "Go Live"
-
-3. **Open in browser:**
-Navigate to `http://localhost:8000` (or the port your server uses)
-
-### Why a Local Server?
-This game uses ES modules which require a web server due to CORS restrictions. You cannot simply open `index.html` directly in your browser.
-
-## 🎮 Controls
-
-### Movement
-- **WASD** - Move character
-- **SHIFT** - Dash/Sprint
-- **SPACE** - Jump
-- **Mouse** - Rotate camera
-
-### Interactions
-- **E** - Talk to NPCs / Collect echoes
-- **F** - Feed dragons
-- **R** - Ride dragon (requires Level 3+ friendship)
-
-### Emotes
-- **G** - Wave emote
-- **H** - Dance emote
-- **J** - Cheer emote
-- **K** - Bow emote
-
-### UI Panels
-- **Q** - Toggle Quest Log
-- **I** - Toggle Inventory
-- **M** - Open Merchant (when near shop)
-- **ESC** - Close dialogs
-
-## 📁 Project Structure
-
-```
-echo-seekers/
-├── index.html              # Main HTML file with UI elements and styles
-├── main.js                 # Game initialization and main loop
-├── sceneSetup.js          # Three.js scene configuration
-├── environment.js         # Terrain, skybox, lighting
-├── player.js              # Player model loading and animations
-├── rosieControls.js       # Movement and camera controls
-├── questSystem.js         # Quest tracking and UI
-├── npcSystem.js           # NPC dialogue and interactions
-├── echoSystem.js          # Magical echo collectibles
-├── dragonNPC.js           # Dragon AI and behaviors
-├── dragonFeeding.js       # Dragon friendship mechanics
-├── buildings.js           # Cottage, castle, stable
-├── townBuildings.js       # Complete village system (1,500+ lines)
-├── merchantInventory.js   # Economy and trading system
-├── worldPopulation.js     # NPCs, trees, fireflies
-├── inventorySystem.js     # Player inventory management
-├── reputationSystem.js    # Faction reputation tracking
-├── dialogueChoiceSystem.js # Branching dialogue
-├── customizationSystem.js # Character appearance
-├── teamSystem.js          # Multiplayer team colors
-├── gameplayEnhancements.js # Score and combo systems
-├── footstepSystem.js      # Audio/visual footsteps
-└── README.md              # This file
-```
-
-## 🛠️ Technical Details
-
-### Architecture
-- **Buildless ESM** - No webpack, no babel, pure ES modules
-- **Three.js 0.160.0, ByteDance, Tripo** - Modern 3D rendering
-- **Importmaps** - CDN-based module resolution
-- **Zero Dependencies** - No npm install required
-
-### Performance
-- **Shadow mapping** with PCFSoftShadowMap
-- **Optimized geometry** with buffer pooling
-- **LOD considerations** for distant objects
-- **Efficient particle systems** for effects
-
-### Code Quality
-- Modular class-based architecture
-- Clear separation of concerns
-- Event-driven systems
-- Extensive inline documentation
-
-## 🎨 Asset Credits
-
-### 3D Models
-- **Adventurer Character** - Mixamo/Adobe
-- **Architecture & Props** - Procedurally generated geometry
-
-### Textures
-- Skybox - Custom gradient system
-- Terrain - Procedural grass pattern
-
-All game code is original and written specifically for this project.
-
-## 🗺️ Roadmap
-
-### Current Features (v1.0)
-- ✅ Complete village with 10+ buildings
-- ✅ Quest system with 8 quests
-- ✅ Merchant economy with 50+ items
-- ✅ Dragon friendship and riding
-- ✅ Visual quest tracking UI
-- ✅ Location discovery notifications
-
-### Planned Features
-- 🔄 More quests and storylines
-- 🔄 Combat system
-- 🔄 Crafting mechanics
-- 🔄 Additional NPCs with unique personalities
-- 🔄 Weather system
-- 🔄 Save/load functionality
-- 🔄 Multiplayer support
-- 🔄 Sound effects and music
-- 🔄 Mobile touch controls
-- 🔄 Additional villages and regions
-
-## 🤝 Contributing
-
-Contributions are welcome! Here's how you can help:
-
-1. **Fork the repository**
-2. **Create a feature branch** (`git checkout -b feature/AmazingFeature`)
-3. **Commit your changes** (`git commit -m 'Add some AmazingFeature'`)
-4. **Push to the branch** (`git push origin feature/AmazingFeature`)
-5. **Open a Pull Request**
-
-### Contribution Guidelines
-- Follow existing code style and architecture
-- Test your changes thoroughly
-- Update documentation as needed
-- Keep commits focused and descriptive
-
-## 🐛 Known Issues
-
-- Dragon pathing occasionally clips through terrain
-- Market stall discovery can trigger multiple times
-- Performance may vary on lower-end devices
-- Some animations may not sync perfectly
-
-## 📝 License
-
-This project is licensed under the MIT License - see below for details:
-
-```
-MIT License
-
-Copyright (c) 2024 [Your Name]
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-## 🙏 Acknowledgments
-
-- **Three.js Team ByteDance Tripo ** - For the incredible 3D library
-- **Rosebud AI** - For the development platform
-- **ByteDance & Tripo  ** - For API intergrations with game assets and AI models
-
-## 📧 Contact
-
-- **GitHub Issues** - For bug reports and feature requests
-- **Discussions** - For questions and community chat
-
-## 🎮 Screenshots
-
-> Add screenshots of your game here showing:
-> - Village overview
-> - Quest log UI
-> - Dragon riding
-> - Merchant interface
-> - Character customization
+> A 3D dungeon where every action, every room, every moment is remembered by the AI.
+> Burn a room. Leave. Come back. The dungeon knows what you did.
 
 ---
 
-**⚡ Built with passion using modern web technologies | No build step required | Pure JavaScript magic ✨**
+## Tech Stack
+- **Three.js** — 3D rendering, room geometry, player movement
+- **Anthropic Claude** — Room narration, action consequences, NPC dialogue
+- **Tripo 3D** — 3D mesh generation for room assets
+- **ByteDance SeeDream** — Texture generation / environment evolution
+- **Vite** — Dev server (zero config)
+
+---
+
+## Setup (Do Tonight)
+
+### 1. Install dependencies
+```bash
+cd echoes
+npm install
+```
+
+### 2. Pre-generate 3D assets (CRITICAL — do this before the jam)
+Tripo 3D takes 30–90 seconds per mesh. Generate all 7 rooms tonight so you have
+cached .glb files and don't depend on API latency during your live demo.
+
+```bash
+TRIPO_KEY=your_tripo_key_here node prebatch.js
+```
+
+This creates `assets/rooms/*.glb` for all 7 dungeon rooms in parallel.
+Expected output:
+```
+✓  entrance.glb (2,400 KB)
+✓  altar.glb    (1,800 KB)
+✓  throne.glb   (2,100 KB)
+✓  crypt.glb    (1,600 KB)
+✓  forge.glb    (2,300 KB)
+✓  garden.glb   (1,900 KB)
+✓  library.glb  (2,200 KB)
+```
+
+If Tripo fails or you don't have a key, the game falls back to procedural geometry
+(colored walls, props, torchlight). It still looks great and the AI narration still works.
+
+### 3. Run the dev server
+```bash
+npm run dev
+```
+
+Opens at http://localhost:3000
+
+---
+
+## Game Controls
+| Key | Action |
+|-----|--------|
+| WASD | Move |
+| Mouse | Look around |
+| E | Enter door (when near one) |
+| Burn button | Sets current room on fire |
+| Examine button | Studies the room |
+| Linger button | Spends time in the room |
+
+---
+
+## Judging Criteria Checklist
+
+| Criterion | How Echoes demonstrates it |
+|-----------|---------------------------|
+| **Spatial Understanding** | Three.js 3D space + Tripo-generated room meshes + door portal system |
+| **Environmental Coherence** | World state JSON tracks every event — charred rooms stay charred |
+| **Dynamic Simulation** | Rooms age, moods evolve, reputation system cascades through NPC behavior |
+| **Emergent Experiences** | LLM reads full world state history to generate unique narration on each visit |
+
+---
+
+## Demo Script (2 minutes)
+
+1. **Open** — show the dungeon loading, walk into Entrance
+2. **Room narration** — point out the AI-generated description appearing
+3. **Navigate** — go to the Altar room
+4. **Burn it** — click Burn, show consequence text, show memory sidebar update
+5. **Leave** — go to the Forge
+6. **Return to Altar** — re-enter. Point out:
+   - Different description (references the fire)
+   - Visual change (darker, ash-tinted)
+   - Memory sidebar shows "charred — Altar of Ash"
+7. **Throne room** — walk to Throne Room, show the NPC reacting to your arsonist reputation
+8. **Close** — "Every asset was generated by Tripo 3D. Every texture by SeeDream. The narration is live Claude. The dungeon creates itself."
+
+---
+
+## File Structure
+```
+echoes/
+├── index.html          ← Entry point + all CSS + HUD elements
+├── package.json        ← Vite dev server
+├── prebatch.js         ← Run tonight to pre-generate Tripo meshes
+├── src/
+│   ├── main.js         ← Three.js scene, camera, room loading, game loop
+│   ├── worldState.js   ← All state + mutation helpers + UI sync
+│   ├── llmEngine.js    ← Claude API + Tripo + SeeDream + demo fallbacks
+│   └── dungeonGraph.js ← Room connections + minimap layout
+└── assets/
+    ├── rooms/          ← Pre-generated .glb files (from prebatch.js)
+    └── textures/       ← SeeDream-generated texture files
+```
+
+---
+
+## Extending (if you have time)
+
+**Add more rooms** — add an entry to `worldState.js` rooms + `dungeonGraph.js` DOOR_POSITIONS
+
+**Richer events** — add more event tags in `llmEngine.js` DEMO_ACTION_RESPONSES
+
+**SeeDream texture swaps** — in `main.js`, after `applyCharEffect()`, call `generateRoomTexture()` and apply the returned URL as a Three.js texture map on wall meshes
+
+**SeeDance NPC animation** — replace the procedural orb NPC in `buildNPC()` with a skinned mesh + animation clips generated by SeeDance
+
+---
+
+## API Keys
+
+Keys are entered in the browser UI on startup and stored only in `window._echoesConfig` for the session. They are never written to disk.
+
+**Demo mode** — leave all keys empty to run with mock AI responses and procedural geometry. Fully functional for testing the core loop.

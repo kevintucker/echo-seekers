@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Echoes — The Dungeon Remembers</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #c9a84c;
+      --gold-dim: #7a6230;
+      --ash: #1a1612;
+      --ember: #8b2c0a;
+      --frost: #2a4a6b;
+      --stone: #2d2a26;
+      --ink: #0e0c0a;
+      --parchment: #e8dfc8;
+      --mist: rgba(200,190,170,0.06);
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--ink);
+      color: var(--parchment);
+      font-family: 'Crimson Pro', Georgia, serif;
+      overflow: hidden;
+    }
+
+    /* ── LOADING SCREEN ── */
+    #loading-screen {
+      position: fixed; inset: 0; z-index: 1000;
+      background: var(--ink);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 2rem;
+      transition: opacity 0.8s ease;
+    }
+    #loading-screen.fade-out { opacity: 0; pointer-events: none; }
+    .loading-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      text-shadow: 0 0 40px rgba(201,168,76,0.4);
+    }
+    .loading-sub {
+      font-family: 'Crimson Pro', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: rgba(232,223,200,0.5);
+      letter-spacing: 0.15em;
+    }
+    .loading-bar-wrap {
+      width: 280px; height: 2px;
+      background: rgba(201,168,76,0.15);
+      border-radius: 1px;
+    }
+    .loading-bar {
+      height: 100%; width: 0%;
+      background: var(--gold);
+      border-radius: 1px;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 8px var(--gold);
+    }
+    .loading-status {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(232,223,200,0.35);
+    }
+
+    /* ── THREE.JS CANVAS ── */
+    #game-canvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+    }
+
+    /* ── HUD LAYER ── */
+    #hud {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Crosshair */
+    #crosshair {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 16px; height: 16px;
+    }
+    #crosshair::before, #crosshair::after {
+      content: ''; position: absolute;
+      background: rgba(201,168,76,0.6);
+    }
+    #crosshair::before { width: 1px; height: 100%; left: 50%; transform: translateX(-50%); }
+    #crosshair::after  { width: 100%; height: 1px; top: 50%; transform: translateY(-50%); }
+
+    /* Room name + description */
+    #room-info {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 0 0 3rem;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.5rem;
+      pointer-events: none;
+    }
+    #room-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    #room-desc {
+      font-family: 'Crimson Pro', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: rgba(232,223,200,0.75);
+      max-width: 560px;
+      text-align: center;
+      line-height: 1.6;
+      opacity: 0;
+      transition: opacity 1s ease;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+    }
+    #room-name.visible, #room-desc.visible { opacity: 1; }
+
+    /* Minimap */
+    #minimap {
+      position: absolute; top: 1.5rem; right: 1.5rem;
+      pointer-events: auto;
+    }
+    #minimap-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      text-align: right;
+      margin-bottom: 0.5rem;
+    }
+    #minimap-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 28px);
+      grid-template-rows: repeat(3, 28px);
+      gap: 3px;
+    }
+    .map-cell {
+      width: 28px; height: 28px;
+      border: 0.5px solid rgba(201,168,76,0.15);
+      border-radius: 3px;
+      background: rgba(14,12,10,0.6);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.4s ease;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+    .map-cell.active { border-color: var(--gold); background: rgba(201,168,76,0.15); box-shadow: 0 0 6px rgba(201,168,76,0.3); }
+    .map-cell.visited { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.06); }
+    .map-cell.charred { border-color: rgba(139,44,10,0.6); background: rgba(139,44,10,0.1); }
+    .map-cell.empty { opacity: 0; pointer-events: none; }
+    .map-cell-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.45rem;
+      letter-spacing: 0.05em;
+      color: rgba(201,168,76,0.5);
+      text-align: center;
+      line-height: 1.2;
+    }
+    .map-cell.active .map-cell-label { color: var(--gold); }
+
+    /* Memory sidebar */
+    #memory-panel {
+      position: absolute; top: 1.5rem; left: 1.5rem;
+      width: 220px;
+      pointer-events: auto;
+    }
+    #memory-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 0.75rem;
+    }
+    #memory-list {
+      display: flex; flex-direction: column; gap: 4px;
+      max-height: 200px;
+      overflow: hidden;
+    }
+    .memory-entry {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.75rem;
+      color: rgba(232,223,200,0.45);
+      line-height: 1.4;
+      padding: 4px 0;
+      border-bottom: 0.5px solid rgba(201,168,76,0.08);
+      animation: fadeInLeft 0.4s ease forwards;
+    }
+    .memory-entry:first-child { color: rgba(232,223,200,0.7); }
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-6px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Reputation bar */
+    #rep-panel {
+      position: absolute; bottom: 1.5rem; left: 1.5rem;
+      pointer-events: none;
+    }
+    #rep-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 0.5rem;
+    }
+    .rep-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 4px;
+    }
+    .rep-name {
+      font-size: 0.65rem;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.1em;
+      color: rgba(232,223,200,0.4);
+      width: 60px;
+    }
+    .rep-bar-bg {
+      width: 80px; height: 2px;
+      background: rgba(201,168,76,0.1);
+      border-radius: 1px;
+    }
+    .rep-bar-fill {
+      height: 100%;
+      border-radius: 1px;
+      transition: width 0.6s ease;
+    }
+    .rep-bar-fill.explorer { background: #2a7a4a; }
+    .rep-bar-fill.arsonist { background: var(--ember); }
+    .rep-bar-fill.wanderer { background: var(--frost); }
+
+    /* Action bar */
+    #action-bar {
+      position: absolute; bottom: 1.5rem; right: 1.5rem;
+      display: flex; flex-direction: column; gap: 6px;
+      pointer-events: auto;
+    }
+    .action-btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(232,223,200,0.5);
+      background: rgba(14,12,10,0.7);
+      border: 0.5px solid rgba(201,168,76,0.2);
+      padding: 6px 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: right;
+    }
+    .action-btn:hover { color: var(--gold); border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.06); }
+    .action-btn.fire:hover { color: #f0612a; border-color: rgba(240,97,42,0.5); }
+    .action-btn[disabled] { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+
+    /* Enter door prompt */
+    #door-prompt {
+      position: absolute; top: 40%; left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(201,168,76,0.7);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    #door-prompt.visible { opacity: 1; }
+
+    /* Vignette overlay */
+    #vignette {
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Transition flash */
+    #transition {
+      position: fixed; inset: 0;
+      background: var(--ink);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 50;
+      transition: opacity 0.4s ease;
+    }
+    #transition.flash { opacity: 1; }
+
+    /* Pointer lock overlay */
+    #click-to-start {
+      position: fixed; inset: 0; z-index: 20;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1rem;
+      background: rgba(0,0,0,0.6);
+      cursor: pointer;
+      transition: opacity 0.4s;
+    }
+    #click-to-start.hidden { opacity: 0; pointer-events: none; }
+    .start-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+    }
+    .start-sub {
+      font-size: 0.8rem;
+      font-style: italic;
+      color: rgba(232,223,200,0.4);
+      letter-spacing: 0.1em;
+    }
+    .key-hint {
+      display: flex; gap: 1rem; margin-top: 0.5rem;
+    }
+    .key {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: rgba(201,168,76,0.6);
+      border: 0.5px solid rgba(201,168,76,0.3);
+      padding: 4px 8px;
+    }
+
+    /* API config modal */
+    #config-modal {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.85);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #config-modal.hidden { display: none; }
+    .config-box {
+      background: var(--stone);
+      border: 0.5px solid rgba(201,168,76,0.3);
+      padding: 2.5rem;
+      width: 500px;
+      max-width: 90vw;
+    }
+    .config-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .config-sub {
+      font-size: 0.85rem;
+      font-style: italic;
+      color: rgba(232,223,200,0.45);
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+    .config-field { margin-bottom: 1.25rem; }
+    .config-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .config-input {
+      width: 100%;
+      background: rgba(0,0,0,0.4);
+      border: 0.5px solid rgba(201,168,76,0.25);
+      color: var(--parchment);
+      font-family: 'Crimson Pro', monospace;
+      font-size: 0.85rem;
+      padding: 8px 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .config-input:focus { border-color: rgba(201,168,76,0.6); }
+    .config-btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: var(--gold);
+      border: none;
+      padding: 10px 28px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-top: 0.5rem;
+    }
+    .config-btn:hover { opacity: 0.85; }
+    .config-note {
+      font-size: 0.72rem;
+      color: rgba(232,223,200,0.3);
+      margin-top: 1.5rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+<!-- API Config Modal (shown first) -->
+<div id="config-modal">
+  <div class="config-box">
+    <div class="config-title">Configure Echoes</div>
+    <div class="config-sub">Enter your API keys to awaken the dungeon. Keys are stored only in this session.</div>
+
+    <div class="config-field">
+      <label class="config-label" for="key-anthropic">Anthropic API Key (LLM narration)</label>
+      <input class="config-input" id="key-anthropic" type="password" placeholder="sk-ant-..." />
+    </div>
+    <div class="config-field">
+      <label class="config-label" for="key-tripo">Tripo 3D API Key (mesh generation)</label>
+      <input class="config-input" id="key-tripo" type="password" placeholder="tripo_..." />
+    </div>
+    <div class="config-field">
+      <label class="config-label" for="key-seedream">ByteDance SeeDream API Key (textures)</label>
+      <input class="config-input" id="key-seedream" type="password" placeholder="seed_..." />
+    </div>
+
+    <button class="config-btn" onclick="initGame()">Enter the Dungeon</button>
+    <div class="config-note">
+      No keys? The dungeon runs in <strong style="color:var(--gold-dim)">demo mode</strong> with pre-generated assets and mock AI responses. Leave fields empty to demo.
+    </div>
+  </div>
+</div>
+
+<!-- Loading Screen -->
+<div id="loading-screen" style="display:none">
+  <div class="loading-title">ECHOES</div>
+  <div class="loading-sub">the dungeon remembers</div>
+  <div class="loading-bar-wrap"><div class="loading-bar" id="loading-bar"></div></div>
+  <div class="loading-status" id="loading-status">awakening...</div>
+</div>
+
+<!-- Three.js Canvas -->
+<canvas id="game-canvas"></canvas>
+
+<!-- Vignette -->
+<div id="vignette"></div>
+
+<!-- Transition flash -->
+<div id="transition"></div>
+
+<!-- Click to start -->
+<div id="click-to-start" class="hidden">
+  <div class="start-title">Click to Enter</div>
+  <div class="start-sub">the dungeon awaits your presence</div>
+  <div class="key-hint">
+    <span class="key">WASD — move</span>
+    <span class="key">Mouse — look</span>
+    <span class="key">E — interact</span>
+    <span class="key">ESC — pause</span>
+  </div>
+</div>
+
+<!-- HUD -->
+<div id="hud">
+  <div id="crosshair"></div>
+
+  <!-- Room info bottom center -->
+  <div id="room-info">
+    <div id="room-name"></div>
+    <div id="room-desc"></div>
+  </div>
+
+  <!-- Minimap top right -->
+  <div id="minimap">
+    <div id="minimap-label">Dungeon Map</div>
+    <div id="minimap-grid"></div>
+  </div>
+
+  <!-- Memory panel top left -->
+  <div id="memory-panel">
+    <div id="memory-label">The Dungeon Remembers</div>
+    <div id="memory-list"></div>
+  </div>
+
+  <!-- Rep bottom left -->
+  <div id="rep-panel">
+    <div id="rep-label">Your Legend</div>
+    <div class="rep-row">
+      <span class="rep-name">Explorer</span>
+      <div class="rep-bar-bg"><div class="rep-bar-fill explorer" id="rep-explorer" style="width:0%"></div></div>
+    </div>
+    <div class="rep-row">
+      <span class="rep-name">Arsonist</span>
+      <div class="rep-bar-bg"><div class="rep-bar-fill arsonist" id="rep-arsonist" style="width:0%"></div></div>
+    </div>
+    <div class="rep-row">
+      <span class="rep-name">Wanderer</span>
+      <div class="rep-bar-bg"><div class="rep-bar-fill wanderer" id="rep-wanderer" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- Action buttons bottom right -->
+  <div id="action-bar">
+    <button class="action-btn fire" onclick="performAction('burn')">Burn ↑</button>
+    <button class="action-btn" onclick="performAction('examine')">Examine</button>
+    <button class="action-btn" onclick="performAction('linger')">Linger</button>
+  </div>
+
+  <!-- Door prompt -->
+  <div id="door-prompt">[ E ] Pass Through</div>
+</div>
+
+<!-- Scripts -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="src/main.js"></script>
+
+</body>
+</html>
