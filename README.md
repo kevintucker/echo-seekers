@@ -2,7 +2,7 @@
 Quest to tame your dragon empathy AI based game
 # 🎮 Echo Seekers: Twilight Restoration
 
-A rich 3D open-world fantasy adventure game built with **Three.js** in a **buildless ESM environment**. Explore a magical twilight realm, complete quests, discover a thriving village, and restore ancient magic to the world. I used yteDance and Tripo API for the assets and AI-native interactive worlds.
+A rich 3D open-world fantasy adventure game built with **Three.js** in a **buildless ESM environment**. Explore a magical twilight realm, complete quests, discover a thriving village, and restore ancient magic to the world. I used ByteDance and Tripo API for the assets and AI-native interactive worlds. The quest is to keep your dragon alive as the seasons change. It's like having a virtual pet dragon that is born and depends on you to keep it alive. 
 
 ![Game Banner](https://img.shields.io/badge/Three.js-0.160.0-blue) ![Status](https://img.shields.io/badge/Status-Active-success) ![License](https://img.shields.io/badge/License-MIT-green)
 
