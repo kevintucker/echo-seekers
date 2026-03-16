@@ -74,7 +74,7 @@ A rich 3D open-world fantasy adventure game built with **Three.js** in a **build
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/yourusername/echo-seekers.git
+git clone https://kevintucker/echo-seekers.git
 cd echo-seekers
 ```
 
