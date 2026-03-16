@@ -1,6 +1,6 @@
 # 🎮 Echo Seekers: Twilight Restoration
 
-A rich 3D open-world fantasy adventure game built with **Three.js** in a **buildless ESM environment**. Explore a magical twilight realm, complete quests, discover a thriving village, and restore ancient magic to the world.
+A rich 3D open-world fantasy adventure game built with **Three.js** in a **buildless ESM environment**. Explore a magical twilight realm, complete quests, discover a thriving village, and restore ancient magic to the world. This is an empathy base game for kids designed to show them compassion to wildlife and animals. Dragons are usually portrayed as montrous but you can see for yourself how tame and gentle they are by feeding them and being their owner. The players are rewarded for their kindness and compassion to the dragons. This is where the Enable AI-native interactive worlds evolve beyond scripted behavior. It's AI driven to reward the players who feed their dragon and care for them the best.
 
 ![Game Banner](https://img.shields.io/badge/Three.js-0.160.0-blue) ![Status](https://img.shields.io/badge/Status-Active-success) ![License](https://img.shields.io/badge/License-MIT-green)
 
