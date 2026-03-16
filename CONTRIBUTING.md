@@ -185,7 +185,8 @@ When adding 3D objects:
 - [Three.js Examples](https://threejs.org/examples/)
 - [ES6 Modules Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
 - [WebGL Best Practices](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices)
-
+- https://platform.tripo3d.ai/docs/introduction
+- https://www.byteplus.com/en
 ## 🤝 Code of Conduct
 
 - Be respectful and constructive
