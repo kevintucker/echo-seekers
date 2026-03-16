@@ -163,7 +163,7 @@ echo-seekers/
 
 ### Architecture
 - **Buildless ESM** - No webpack, no babel, pure ES modules
-- **Three.js 0.160.0** - Modern 3D rendering
+- **Three.js 0.160.0, ByteDance, Tripo** - Modern 3D rendering
 - **Importmaps** - CDN-based module resolution
 - **Zero Dependencies** - No npm install required
 
